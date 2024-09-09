@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn Người Nhanh Nhất</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Chọn Người Ấn Nhanh Nhất</h1>
+    <p id="result">Chưa có ai được chọn!</p>
+    
+    <div class="buttons">
+        <button onclick="playerPressed(1)">Người chơi 1</button>
+        <button onclick="playerPressed(2)">Người chơi 2</button>
+        <button onclick="playerPressed(3)">Người chơi 3</button>
+        <button onclick="playerPressed(4)">Người chơi 4</button>
+    </div>
+
+    <button onclick="resetGame()">Chơi lại</button>
+
+    <script>
+        const socket = io();
+
+        // Khi người chơi nhấn nút
+        function playerPressed(playerNumber) {
+            socket.emit('playerPressed', playerNumber);
+        }
+
+        // Khi server gửi kết quả
+        socket.on('result', (message) => {
+            document.getElementById('result').innerText = message;
+        });
+
+        // Reset trò chơi
+        function resetGame() {
+            socket.emit('resetGame');
+        }
+
+        socket.on('reset', () => {
+            document.getElementById('result').innerText = "Chưa có ai được chọn!";
+        });
+    </script>
+</body>
+</html>
